@@ -1,0 +1,491 @@
+<!-- Save as index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LAVEN SAJI — Unreal Engine Developer Portfolio</title>
+<meta name="description" content="Portfolio for Unreal Engine developer — game projects, virtual production, cinematic scenes." />
+
+<style>
+:root{
+  --bg:#0b0d0f; --card:#111315; --muted:#9aa3a8; --text:#e6eef3; --accent:#00d1c1;
+  --glass: rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; font-family:Inter,system-ui, -apple-system, "Segoe UI", Roboto, Arial; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased}
+.container{max-width:1100px;margin:28px auto;padding:18px}
+
+/* Header */
+.header{display:flex;gap:18px;align-items:center;justify-content:space-between}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#7be5d8);display:flex;align-items:center;justify-content:center;font-weight:800;color:#04282a}
+.title{line-height:1}
+.title h1{margin:0;font-size:20px}
+.title p{margin:3px 0 0;color:var(--muted);font-size:13px}
+
+/* Controls */
+.controls{display:flex;gap:10px;align-items:center}
+.btn{background:var(--accent); color:#04282a;padding:8px 12px;border-radius:8px;border:0;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04)}
+.small{padding:6px 10px;font-size:14px}
+
+/* Hero / profile upload */
+.hero{display:flex;gap:20px;align-items:center;margin-top:18px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-radius:12px;border:1px solid var(--glass)}
+.profile-wrap{width:128px;height:128px;border-radius:12px;overflow:hidden;border:3px solid rgba(0,0,0,0.25);flex:0 0 128px;background:#081015;display:flex;align-items:center;justify-content:center}
+.profile-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-meta{flex:1}
+.hero-meta h2{margin:0 0 6px;color:var(--accent)}
+.hero-meta p{margin:0;color:var(--muted)}
+
+/* Filters */
+.filters{display:flex;gap:10px;margin:18px 0;flex-wrap:wrap}
+.filter{background:var(--card);padding:8px 12px;border-radius:8px;cursor:pointer;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+.filter.active{background:linear-gradient(90deg,var(--accent),#6be7d8); color:#04282a; font-weight:700}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{background:var(--card);border-radius:12px;padding:10px;border:1px solid var(--glass);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(0,0,0,0.6)}
+.thumb{width:100%;height:150px;object-fit:cover;border-radius:8px;background:#000}
+.meta{margin-top:10px}
+.meta h3{margin:0;font-size:16px}
+.meta p{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+/* Modal (lightbox) */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,9,0.9);z-index:9999;padding:24px}
+.modal.show{display:flex}
+.modal-card{max-width:1100px;width:100%;background:transparent;display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:start}
+.modal-media{background:#000;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;max-height:80vh}
+.modal-media img, .modal-media video{max-width:100%;max-height:80vh;display:block}
+.modal-info{background:var(--card);padding:18px;border-radius:10px;border:1px solid var(--glass)}
+.modal-info h3{margin:0 0 6px}
+.modal-info .meta{color:var(--muted);font-size:13px;margin-bottom:12px}
+.modal-info p{color:var(--text);line-height:1.45;font-size:14px}
+.modal-close{position:absolute;right:18px;top:18px;background:transparent;border:0;color:#fff;font-size:30px;cursor:pointer}
+.modal-nav{display:flex;gap:8px;margin-top:12px}
+.icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px;border-radius:8px;cursor:pointer}
+
+/* CV & contact */
+.bottom-row{display:flex;gap:18px;margin-top:20px;flex-wrap:wrap}
+.cv-panel{background:var(--card);padding:12px;border-radius:10px;border:1px solid var(--glass);display:flex;gap:12px;align-items:center;min-width:280px}
+.cv-preview{width:260px;height:160px;border-radius:8px;overflow:hidden;background:#071017;border:1px solid rgba(255,255,255,0.03)}
+.cv-preview iframe{width:100%;height:100%;border:0}
+.contact{margin-left:auto;color:var(--muted)}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.show{opacity:1;transform:translateY(0)}
+
+/* Dark/Light toggle (simple) */
+.theme-toggle{display:flex;align-items:center;gap:8px;color:var(--muted);}
+
+/* Responsive */
+@media (max-width:980px){
+  .modal-card{grid-template-columns:1fr}
+  .modal-info{order:2}
+  .modal-media{order:1}
+  .hero{flex-direction:column;align-items:flex-start}
+  .profile-wrap{width:104px;height:104px}
+  .cv-preview{width:100%;height:220px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- header -->
+  <div class="header">
+    <div class="brand">
+      <div class="logo">YN</div>
+      <div class="title">
+        <h1>Your Name</h1>
+        <p>Unreal Engine Developer — Game Projects · Virtual Production</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="theme-toggle">
+        <label style="font-size:13px;color:var(--muted)">Theme</label>
+        <button id="themeBtn" class="btn small">Toggle</button>
+      </div>
+      <a id="downloadCvHost" class="btn ghost small" style="text-decoration:none;">Download CV</a>
+    </div>
+  </div>
+
+  <!-- hero/profile and upload control -->
+  <div class="hero reveal" id="hero">
+    <div class="profile-wrap" id="profileWrap">
+      <img id="profileImg" src="assets/profile-placeholder.jpg" alt="Profile picture">
+    </div>
+
+    <div class="hero-meta">
+      <h2>Hi — I'm Your Name</h2>
+      <p>Unreal Engine developer focused on cinematic worlds, immersive gameplay and virtual production pipelines. Click a project to view details and media.</p>
+
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <label class="btn small" for="profileUpload">Upload Profile Photo</label>
+        <input id="profileUpload" type="file" accept="image/*" style="display:none">
+        <label class="btn ghost small" for="cvUpload" style="display:inline-block">Upload CV (PDF)</label>
+        <input id="cvUpload" type="file" accept="application/pdf" style="display:none">
+        <a id="downloadCv" class="btn small" style="display:none">Download Uploaded CV</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- filters -->
+  <div class="filters reveal" id="filters">
+    <div class="filter active" data-filter="all">All</div>
+    <div class="filter" data-filter="game">Game Projects</div>
+    <div class="filter" data-filter="vp">Virtual Production</div>
+    <div class="filter" data-filter="level">Level Design</div>
+  </div>
+
+  <!-- projects grid -->
+  <section aria-label="Projects" class="reveal" id="projectsSection">
+    <div class="grid" id="grid">
+
+      <!-- CARD 1 -->
+      <article class="card" data-category="game" data-index="0" tabindex="0">
+        <img class="thumb" src="assets/game1-thumb.jpg" alt="Final Step: The Curse of Pharaoh">
+        <div class="meta">
+          <h3>Final Step: The Curse of Pharaoh</h3>
+          <p class="muted">Story-driven puzzle-horror; Unreal Engine — Level/Lighting/Cinematics</p>
+        </div>
+      </article>
+
+      <!-- CARD 2 -->
+      <article class="card" data-category="game" data-index="1" tabindex="0">
+        <img class="thumb" src="assets/game2-thumb.jpg" alt="Abandoned Factory">
+        <div class="meta">
+          <h3>Abandoned Factory — Horror Level</h3>
+          <p class="muted">Dynamic shadows, audio-driven events, AI patrols</p>
+        </div>
+      </article>
+
+      <!-- CARD 3 -->
+      <article class="card" data-category="vp" data-index="2" tabindex="0">
+        <img class="thumb" src="assets/vp1-thumb.jpg" alt="Canyon Night Virtual Set">
+        <div class="meta">
+          <h3>Canyon Night — Virtual Set</h3>
+          <p class="muted">Sequencer cinematics, green-screen compositing</p>
+        </div>
+      </article>
+
+      <!-- CARD 4 -->
+      <article class="card" data-category="vp" data-index="3" tabindex="0">
+        <img class="thumb" src="assets/vp2-thumb.jpg" alt="Beach Island Cinematic">
+        <div class="meta">
+          <h3>Beach Island Cinematic</h3>
+          <p class="muted">Water simulation, dynamic sky, camera animation</p>
+        </div>
+      </article>
+
+      <!-- CARD 5 -->
+      <article class="card" data-category="level" data-index="4" tabindex="0">
+        <img class="thumb" src="assets/level1-thumb.jpg" alt="Desert Village Level">
+        <div class="meta">
+          <h3>Desert Village — Level Design</h3>
+          <p class="muted">Environmental storytelling, modular assets, performance-tuned</p>
+        </div>
+      </article>
+
+      <!-- Add more cards as needed, ensure data-index increments -->
+    </div>
+  </section>
+
+  <!-- bottom row: CV + contact -->
+  <div class="bottom-row reveal">
+    <div class="cv-panel">
+      <div>
+        <div style="color:var(--muted);font-size:13px">Resume / CV</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:13px">Upload a PDF to preview & provide download to recruiters.</div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <label class="btn small" for="cvUpload2">Choose CV</label>
+          <input id="cvUpload2" type="file" accept="application/pdf" style="display:none">
+          <a id="hostCvLink" class="btn ghost small" href="#" style="pointer-events:none;opacity:0.6">Host CV (optional)</a>
+        </div>
+      </div>
+      <div class="cv-preview" id="cvPreview"><div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted)">No CV preview</div></div>
+    </div>
+
+    <div class="contact">
+      <div style="color:var(--muted)">Contact</div>
+      <div style="margin-top:8px"><a id="mailtoLink" href="mailto:youremail@example.com" style="color:var(--accent);text-decoration:none">youremail@example.com</a></div>
+      <div style="margin-top:10px;color:var(--muted)">Links: <a href="#" style="color:var(--muted);text-decoration:none">LinkedIn</a> · <a href="#" style="color:var(--muted);text-decoration:none">Itch.io</a></div>
+    </div>
+  </div>
+
+  <footer style="margin-top:26px;color:var(--muted);text-align:center;font-size:13px">© <span id="year"></span> Your Name — Unreal Engine Portfolio</footer>
+</div>
+
+<!-- Modal / Lightbox -->
+<div id="modal" class="modal" aria-hidden="true" role="dialog">
+  <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+  <div class="modal-card" role="document">
+    <div class="modal-media" id="modalMedia"></div>
+    <div class="modal-info">
+      <h3 id="modalTitle"></h3>
+      <div class="meta" id="modalMeta"></div>
+      <p id="modalDesc"></p>
+      <div style="margin-top:14px">
+        <strong>Tools / Tech:</strong> <span id="modalTech"></span>
+      </div>
+      <div class="modal-nav" style="margin-top:12px">
+        <button class="icon-btn" id="prevBtn">◀ Prev</button>
+        <button class="icon-btn" id="nextBtn">Next ▶</button>
+        <a id="downloadMedia" class="btn ghost small" style="margin-left:auto" download>Download Media</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- SAMPLE PROJECT DATA (index corresponds to card data-index) ---------- */
+/* Replace media filenames under `src` and `thumb` with your actual filenames placed in assets/ */
+const PROJECTS = [
+  {
+    title: "Final Step: The Curse of Pharaoh",
+    category: "game",
+    thumb: "assets/game1-thumb.jpg",
+    type: "image", // image or video
+    src: "assets/game1.jpg",
+    tech: "Unreal Engine, Sequencer, Blender (assets), Substance Painter",
+    role: "Lead Developer, Narrative Designer, Level & Lighting",
+    desc: `Thousands of years ago… deep within the scorched sands of Egypt… a secret was buried with the dead. In 1323 BC, Pharaoh Tutankhamun died suddenly. No one knew how. Some blamed black magic. Others whispered of a fungus… one that ate the mind and twisted the flesh. The priests sealed the boy king in a cursed tomb, hidden and guarded by ancient glyphs. With him… the virus.
+Centuries later, in 30 BC, the Roman Empire invaded Egypt. Greedy for gold, they broke the seal… and unknowingly, they set the plague free again. Together, Roman healers and Egyptian priests forged a cure. But they feared it could be misused… so they hid it in a Latin scroll: encoded, protected, and lost. Now, in the present day, the tomb has been opened again. NXV-13 returns. You are humanity's last hope — find the scroll, break the curse, stop the spread.`
+  },
+  {
+    title: "Abandoned Factory — Horror Level",
+    category: "game",
+    thumb: "assets/game2-thumb.jpg",
+    type: "video",
+    src: "assets/game2-trailer.mp4",
+    tech: "Unreal Engine, Blueprints, FMOD (audio)",
+    role: "Level Designer · Scripting · Audio Integration",
+    desc: "A claustrophobic puzzle-horror level built around environmental puzzles and audio-driven AI. Features interactable machinery, flickering lights, and tension ramps that guide the player toward key story beats."
+  },
+  {
+    title: "Canyon Night — Virtual Production",
+    category: "vp",
+    thumb: "assets/vp1-thumb.jpg",
+    type: "image",
+    src: "assets/vp1.jpg",
+    tech: "Unreal Engine, Live compositing, NDisplay",
+    role: "Virtual Production Artist · Lighting",
+    desc: "Cinematic virtual set: a canyon at night featuring volumetric fog, animated torch lights and a narrow stone bridge. Built for green-screen compositing with real-time camera tracking and sequencer-driven camera moves."
+  },
+  {
+    title: "Beach Island Cinematic",
+    category: "vp",
+    thumb: "assets/vp2-thumb.jpg",
+    type: "video",
+    src: "assets/vp2-trailer.mp4",
+    tech: "Unreal Engine, Water plugin, Cinematics",
+    role: "Cinematic Lead · Environment Artist",
+    desc: "A short cinematic showcasing dynamic water, foliage systems and procedural weather transitions — used as a showreel piece for virtual production and environment pipelines."
+  },
+  {
+    title: "Desert Village — Level Design",
+    category: "level",
+    thumb: "assets/level1-thumb.jpg",
+    type: "image",
+    src: "assets/level1.jpg",
+    tech: "Unreal Engine, Nanite, Lumen",
+    role: "Level Designer · Environment Artist",
+    desc: "An open-sandbox village level where environmental storytelling replaces direct exposition. Optimized for performance with LODs and Nanite assets, while retaining rich lighting and interactivity."
+  }
+];
+
+/* ---------- UI wiring: populate grid from PROJECTS ---------- */
+const grid = document.getElementById('grid');
+function populateGrid(){
+  grid.innerHTML = '';
+  PROJECTS.forEach((p, i) => {
+    const card = document.createElement('article');
+    card.className = 'card reveal';
+    card.dataset.category = p.category;
+    card.dataset.index = i;
+    card.tabIndex = 0;
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = p.thumb;
+    img.alt = p.title;
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerHTML = `<h3>${p.title}</h3><p class="muted">${p.role} · ${p.tech.split(',')[0]}</p>`;
+    card.appendChild(img); card.appendChild(meta);
+    grid.appendChild(card);
+  });
+}
+populateGrid();
+
+/* ---------- Filter behavior ---------- */
+const filters = document.querySelectorAll('.filter');
+filters.forEach(f => f.addEventListener('click', () => {
+  filters.forEach(x=>x.classList.remove('active'));
+  f.classList.add('active');
+  const filter = f.dataset.filter;
+  document.querySelectorAll('.card').forEach(card=>{
+    if(filter === 'all' || card.dataset.category === filter) card.style.display = '';
+    else card.style.display = 'none';
+  });
+}));
+
+/* ---------- Reveal on scroll ---------- */
+function revealOnScroll(){
+  document.querySelectorAll('.reveal').forEach(el=>{
+    const top = el.getBoundingClientRect().top;
+    if(top < window.innerHeight - 80) el.classList.add('show');
+  });
+}
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
+
+/* ---------- Modal (lightbox) ---------- */
+const modal = document.getElementById('modal');
+const modalMedia = document.getElementById('modalMedia');
+const modalTitle = document.getElementById('modalTitle');
+const modalMeta = document.getElementById('modalMeta');
+const modalDesc = document.getElementById('modalDesc');
+const modalTech = document.getElementById('modalTech');
+const downloadMedia = document.getElementById('downloadMedia');
+let currentIndex = 0;
+
+function openModal(index){
+  const p = PROJECTS[index];
+  currentIndex = index;
+  // media area
+  modalMedia.innerHTML = '';
+  if(p.type === 'video'){
+    const v = document.createElement('video');
+    v.src = p.src; v.controls = true; v.autoplay = true; v.style.maxWidth='100%';
+    v.setAttribute('playsinline','');
+    modalMedia.appendChild(v);
+    downloadMedia.href = p.src; downloadMedia.download = '';
+  } else {
+    const img = document.createElement('img');
+    img.src = p.src; img.alt = p.title; img.style.maxWidth='100%';
+    modalMedia.appendChild(img);
+    downloadMedia.href = p.src; downloadMedia.download = '';
+  }
+  modalTitle.textContent = p.title;
+  modalMeta.textContent = `${p.role} · ${p.category.toUpperCase()}`;
+  modalDesc.textContent = p.desc;
+  modalTech.textContent = p.tech;
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+}
+function closeModal(){ 
+  // pause any video
+  const v = modalMedia.querySelector('video'); if(v){ try{ v.pause(); v.currentTime = 0 }catch(e){} }
+  modal.classList.remove('show'); modal.setAttribute('aria-hidden','true');
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+/* prev/next */
+document.getElementById('prevBtn').addEventListener('click', () => {
+  currentIndex = (currentIndex - 1 + PROJECTS.length) % PROJECTS.length;
+  openModal(currentIndex);
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  currentIndex = (currentIndex + 1) % PROJECTS.length;
+  openModal(currentIndex);
+});
+
+/* open when clicking a card or pressing Enter */
+grid.addEventListener('click', (e)=>{
+  const card = e.target.closest('.card');
+  if(!card) return;
+  openModal(Number(card.dataset.index));
+});
+grid.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){
+    const card = e.target.closest('.card');
+    if(!card) return;
+    openModal(Number(card.dataset.index));
+  }
+});
+
+/* ---------- Profile image upload (client-side preview) ---------- */
+const profileUpload = document.getElementById('profileUpload');
+const profileImg = document.getElementById('profileImg');
+profileUpload.addEventListener('change', (e)=>{
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  if(!f.type.startsWith('image/')) return alert('Please select an image file.');
+  const url = URL.createObjectURL(f);
+  profileImg.src = url;
+});
+
+/* ---------- CV upload & preview (client-side) ---------- */
+const cvUpload = document.getElementById('cvUpload');
+const cvUpload2 = document.getElementById('cvUpload2');
+const cvPreview = document.getElementById('cvPreview');
+const downloadCvBtn = document.getElementById('downloadCv');
+const downloadCvHost = document.getElementById('downloadCvHost');
+cvUpload.addEventListener('change', handleCvFile);
+cvUpload2.addEventListener('change', handleCvFile);
+function handleCvFile(e){
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  if(f.type !== 'application/pdf') return alert('Please upload a PDF file.');
+  const url = URL.createObjectURL(f);
+  cvPreview.innerHTML = '';
+  const iframe = document.createElement('iframe');
+  iframe.src = url; iframe.title = 'CV preview';
+  cvPreview.appendChild(iframe);
+  downloadCvBtn.style.display = 'inline-block';
+  downloadCvBtn.href = url; downloadCvBtn.download = f.name || 'CV.pdf';
+  downloadCvBtn.textContent = 'Download Uploaded CV';
+  downloadCvHost.style.pointerEvents = 'auto'; downloadCvHost.style.opacity = 1; downloadCvHost.href = url;
+  downloadCvHost.textContent = 'Download CV (hosted)';
+}
+
+/* also allow separate host CV link button */
+document.getElementById('downloadCvHost').addEventListener('click', (e)=>{
+  if(downloadCvHost.href && downloadCvHost.href !== '#') window.open(downloadCvHost.href,'_blank');
+});
+
+/* ---------- Theme toggle (simple invert) ---------- */
+const themeBtn = document.getElementById('themeBtn');
+let dark = true;
+themeBtn.addEventListener('click', ()=>{
+  dark = !dark;
+  if(!dark){
+    document.documentElement.style.setProperty('--bg','#f7f9fa');
+    document.documentElement.style.setProperty('--card','#ffffff');
+    document.documentElement.style.setProperty('--muted','#57606a');
+    document.documentElement.style.setProperty('--text','#0b1220');
+    document.documentElement.style.setProperty('--glass','rgba(0,0,0,0.04)');
+  } else {
+    document.documentElement.style.setProperty('--bg','#0b0d0f');
+    document.documentElement.style.setProperty('--card','#111315');
+    document.documentElement.style.setProperty('--muted','#9aa3a8');
+    document.documentElement.style.setProperty('--text','#e6eef3');
+    document.documentElement.style.setProperty('--glass','rgba(255,255,255,0.03)');
+  }
+});
+
+/* ---------- Download hosted CV button initial state ---------- */
+downloadCvHost.style.pointerEvents = 'none'; downloadCvHost.style.opacity = 0.6;
+
+/* ---------- mailto link quick copy ---------- */
+const mailtoLink = document.getElementById('mailtoLink');
+mailtoLink.addEventListener('click', (e)=>{
+  // normal mailto will open user's email client
+});
+
+/* ---------- set footer year ---------- */
+document.getElementById('year').textContent = (new Date()).getFullYear();
+
+/* ---------- Accessibility: focus outlines for keyboard users ---------- */
+document.addEventListener('keydown', (e)=>{ if(e.key === 'Tab') document.body.classList.add('show-focus'); });
+
+</script>
+</body>
+</html>
